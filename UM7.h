@@ -9,19 +9,29 @@
 
 #include <stdlib.h>
 
-class UM7{
+class UM7 {
 public:
-	short roll, pitch, yaw, roll_rate, pitch_rate, yaw_rate;
 	
 	UM7();
 	
 	bool encode(byte c);
 	
+	float roll() const { return convert_degree(_roll); }
+	float pitch() const { return convert_degree(_pitch); }
+	float yaw() const { return convert_degree(_yaw); }
+	
+	float roll_rate() const { return convert_rate(_roll_rate); }
+	float pitch_rate() const { return convert_rate(_pitch_rate); }
+	float yaw_rate() const { return convert_rate(_yaw_rate); }
+	
 private:
 
-	int state;
-	
+	short _roll, _pitch, _yaw, _roll_rate, _pitch_rate, _yaw_rate;
+	short _qa, _qb, _qc, _qd;
+
 	enum {STATE_ZERO,STATE_S,STATE_SN,STATE_SNP,STATE_PT,STATE_DATA,STATE_CHK1,STATE_CHK0};
+
+	int state;
 	
 	byte packet_type;
 	byte address;
@@ -41,6 +51,10 @@ private:
 	bool checksum(void);
 	
 	void save(void);
+	
+	static float convert_degree(short deg);
+	static float convert_rate(short rate);
+	static float convert_quat(short quat);
 };
 
 #endif

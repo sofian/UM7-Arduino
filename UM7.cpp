@@ -2,6 +2,9 @@
 
 #define DREG_EULER_PHI_THETA 0x70	// Packet address sent from the UM7 that contains roll,pitch,yaw and rates.
 
+#define DD 91.02222    // divider for degrees
+#define DR 16.0        // divider for rate
+
 UM7::UM7() : state(STATE_ZERO){}	// Default constructor
 
 bool UM7::encode(byte c){
@@ -106,4 +109,11 @@ void UM7::save(){
 		}
 		break;
 	}
+}
+float UM7::convert_degree(short deg) {
+  return deg / DD;
+}
+
+float UM7::convert_rate(short rate) {
+  return rate / DR;
 }
