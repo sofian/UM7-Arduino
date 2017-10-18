@@ -45,12 +45,17 @@ private:
 	byte checksum1;		// First byte of checksum
 	byte checksum0;		// Second byte of checksum
 
+	byte read_index; // for the init_read() and next_read() functions
+
 	unsigned short checksum10;			// Checksum received from packet
 	unsigned short computed_checksum;	// Checksum computed from bytes received
 	
 	bool checksum(void);
 	
 	void save(void);
+	
+	void init_read();
+	void next_short(short* dst);
 	
 	static float convert_degree(short deg);
 	static float convert_rate(short rate);

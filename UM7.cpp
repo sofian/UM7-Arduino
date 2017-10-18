@@ -86,30 +86,37 @@ bool UM7::checksum(){
 }
 
 void UM7::save(){
+	init_read();
+	
 	switch(address){
 	case DREG_EULER_PHI_THETA :		// data[6] and data[7] are unused.
 		if(packet_is_batch){
-			roll = data[0] << 8;
-			roll |= data[1];
-			pitch = data[2] << 8;
-			pitch |= data[3];
-			yaw = data[4] << 8;
-			yaw |= data[5];
-			roll_rate = data[8] << 8;
-			roll_rate |= data[9];
-			pitch_rate = data[10] << 8;
-			pitch_rate |= data[11];
-			yaw_rate = data[12] << 8;
-			yaw_rate |= data[13];
+		  next_short(&_roll);
+		  next_short(&_pitch);
+		  next_short(&_yaw);
+		  
+		  short unused;
+		  next_short(&unused);
+		  
+		  next_short(&_roll_rate);
+		  next_short(&_pitch_rate);
+		  next_short(&_yaw_rate);
 		}else{
-			roll = data[0] << 8;
-			roll |= data[1];
-			pitch = data[2] << 8;
-			pitch |= data[3];
+		  next_short(&_roll);
+		  next_short(&_pitch);
 		}
 		break;
 	}
 }
+
+void UM7::init_read() {
+  read_index = 0;
+}
+
+void UM7::next_short(short* dst) {
+  *dst = (data[read_index++] << 8) | data[read_index++];
+}
+
 float UM7::convert_degree(short deg) {
   return deg / DD;
 }
