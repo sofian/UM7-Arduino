@@ -24,6 +24,11 @@ public:
 	float pitch_rate() const { return convert_rate(_pitch_rate); }
 	float yaw_rate() const { return convert_rate(_yaw_rate); }
 	
+	float q_a() const { return convert_quat(_qa); }
+	float q_b() const { return convert_quat(_qb); }
+	float q_c() const { return convert_quat(_qc); }
+	float q_d() const { return convert_quat(_qd); }
+
 private:
 
 	short _roll, _pitch, _yaw, _roll_rate, _pitch_rate, _yaw_rate;

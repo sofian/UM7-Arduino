@@ -1,9 +1,11 @@
 #include "UM7.h"
 
+#define DREG_QUAT_AB         0x6D	// Packet address sent from the UM7 that contains quaternion values.
 #define DREG_EULER_PHI_THETA 0x70	// Packet address sent from the UM7 that contains roll,pitch,yaw and rates.
 
 #define DD 91.02222    // divider for degrees
 #define DR 16.0        // divider for rate
+#define DQ 29789.09091 // divider for quaternion element
 
 UM7::UM7() : state(STATE_ZERO){}	// Default constructor
 
@@ -89,6 +91,18 @@ void UM7::save(){
 	init_read();
 	
 	switch(address){
+
+	case DREG_QUAT_AB :
+		if(packet_is_batch){
+		  next_short(&_qa);
+		  next_short(&_qb);
+		  next_short(&_qc);
+		  next_short(&_qd);
+		}else{
+		  next_short(&_qa);
+		  next_short(&_qb);
+		}
+		break;
 	case DREG_EULER_PHI_THETA :		// data[6] and data[7] are unused.
 		if(packet_is_batch){
 		  next_short(&_roll);
@@ -124,3 +138,8 @@ float UM7::convert_degree(short deg) {
 float UM7::convert_rate(short rate) {
   return rate / DR;
 }
+
+float UM7::convert_quat(short quat) {
+  return quat / DQ;
+}
+
